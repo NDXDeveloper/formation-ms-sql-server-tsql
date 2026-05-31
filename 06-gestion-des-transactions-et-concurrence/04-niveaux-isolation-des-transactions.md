@@ -10,7 +10,7 @@ Dans les sections précédentes (6.3), nous avons découvert les problématiques
 
 La réponse : les **niveaux d'isolation des transactions**.
 
-Les niveaux d'isolation sont comme des **paramètres** que vous pouvez ajuster pour trouver le bon équilibre entre la **cohérence des données** (empêcher les anomalies) et les **performances** (permettre plus de concurrence). SQL Server propose **6 niveaux d'isolation** différents, du moins restrictif au plus strict.
+Les niveaux d'isolation sont comme des **paramètres** que vous pouvez ajuster pour trouver le bon équilibre entre la **cohérence des données** (empêcher les anomalies) et les **performances** (permettre plus de concurrence). SQL Server propose **cinq niveaux d'isolation** (du moins restrictif au plus strict), auxquels s'ajoute une configuration apparentée — **RCSI** — qui n'est pas un niveau en soi mais une option de base de données (nous y revenons en détail plus bas).
 
 ---
 
@@ -108,11 +108,11 @@ L'art du développeur SQL Server est de choisir le **bon niveau** pour chaque si
 
 ---
 
-## Les 6 niveaux d'isolation de SQL Server
+## Les niveaux d'isolation de SQL Server
 
 ### Vue d'ensemble
 
-SQL Server propose 6 niveaux d'isolation, chacun avec ses caractéristiques propres :
+Le tableau ci-dessous récapitule les **cinq niveaux d'isolation** de SQL Server, auxquels s'ajoute l'option **RCSI** (sur une ligne distincte), chacun avec ses caractéristiques propres :
 
 | Niveau | Dirty Reads | Non-Rep. Reads | Phantom Reads | Mécanisme | Performance |
 |--------|-------------|----------------|---------------|-----------|-------------|
@@ -122,6 +122,8 @@ SQL Server propose 6 niveaux d'isolation, chacun avec ses caractéristiques prop
 | **REPEATABLE READ** | ❌ Bloquées | ❌ Bloquées | ✅ Autorisées | Verrous maintenus | ⭐⭐⭐ |
 | **SERIALIZABLE** | ❌ Bloquées | ❌ Bloquées | ❌ Bloquées | Verrous + range | ⭐⭐ |
 | **SNAPSHOT** | ❌ Bloquées | ❌ Bloquées | ❌ Bloquées | Versioning | ⭐⭐⭐⭐ |
+
+> 📌 **Précision importante** : à proprement parler, `SET TRANSACTION ISOLATION LEVEL` ne propose que **cinq** niveaux — READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ, SNAPSHOT et SERIALIZABLE. **RCSI** n'est pas un niveau que l'on sélectionne ainsi : c'est une **option de base de données** (`READ_COMMITTED_SNAPSHOT ON`) qui fait fonctionner READ COMMITTED en mode *versioning*. Il figure sur une ligne distincte de ce tableau parce que son comportement, très utile en pratique, mérite d'être étudié à part (section 6.4.3).
 
 ### Description succincte de chaque niveau
 
@@ -203,6 +205,10 @@ SNAPSHOT                Bloque   Bloque     Bloque
 
 ## Deux approches : Verrous vs Versioning
 
+Ces deux familles portent un nom standard que vous rencontrerez partout :
+- l'approche par **verrous** est dite **pessimiste** : on bloque *par précaution*, en supposant qu'un conflit risque de survenir ;
+- l'approche par **versioning** est dite **optimiste** : on laisse lectures et écritures progresser sans bloquer, en supposant que les conflits sont rares — et on les détecte (puis on les gère) seulement s'ils surviennent réellement.
+
 ### Approche traditionnelle : Les verrous
 
 **Niveaux concernés :** READ COMMITTED, REPEATABLE READ, SERIALIZABLE
@@ -277,17 +283,20 @@ Aucune interaction, isolation totale
 Chaque transaction voit la base comme si elle était seule
 ```
 
-### Le niveau d'isolation SQL standard
+### Niveaux standard et spécificités SQL Server
 
-La norme SQL définit 4 niveaux standards :
+La norme SQL définit 4 niveaux standards, du moins strict au plus strict :
 1. READ UNCOMMITTED
-2. READ COMMITTED (défaut dans la norme)
+2. READ COMMITTED (défaut dans SQL Server)
 3. REPEATABLE READ
 4. SERIALIZABLE
 
-**SQL Server ajoute 2 niveaux modernes :**
-5. READ COMMITTED SNAPSHOT (RCSI) - Variante de READ COMMITTED
-6. SNAPSHOT ISOLATION - Variante de SERIALIZABLE
+**SQL Server y ajoute le *row versioning***, ce qui donne deux configurations supplémentaires :
+
+5. **SNAPSHOT** : un **véritable niveau d'isolation à part entière**, que l'on sélectionne avec `SET TRANSACTION ISOLATION LEVEL SNAPSHOT` (après avoir activé l'option de base `ALLOW_SNAPSHOT_ISOLATION ON`). Il repose sur le versioning, **pas** sur les verrous — ce n'est donc **pas** une simple « variante de SERIALIZABLE » : sa sémantique diffère (sous SNAPSHOT, certaines anomalies comme le *write skew* restent possibles, contrairement à SERIALIZABLE — voir 6.4.6).
+6. **READ COMMITTED SNAPSHOT (RCSI)** : ce n'est **pas** un niveau que l'on choisit avec `SET TRANSACTION ISOLATION LEVEL`. C'est une **option de base de données** (`ALTER DATABASE … SET READ_COMMITTED_SNAPSHOT ON`) qui change le *comportement* du niveau READ COMMITTED : ses lectures se font alors par versioning plutôt que par verrous.
+
+> 📌 **À retenir** : au sens strict, `SET TRANSACTION ISOLATION LEVEL` accepte **cinq** niveaux (READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ, SNAPSHOT, SERIALIZABLE). RCSI n'est pas un sixième niveau, mais une bascule qui transforme READ COMMITTED en sa version « snapshot ». Ce cours lui consacre tout de même une section dédiée (6.4.3) tant son impact pratique est important.
 
 ---
 
@@ -427,7 +436,7 @@ SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
 SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;  -- Blocage massif
 
 -- Considérer :
-SET TRANSACTION ISOLATION LEVEL SNAPSHOT;       -- Même garantie, sans blocage
+SET TRANSACTION ISOLATION LEVEL SNAPSHOT;       -- Isolation forte par versioning, sans blocage
 ```
 
 **5. Garder les transactions courtes**
@@ -456,12 +465,14 @@ SET TRANSACTION ISOLATION LEVEL SNAPSHOT;
 
 **Au niveau de la transaction**
 ```sql
--- Recommandé : définir au début de chaque transaction
-BEGIN TRANSACTION;
+-- Le niveau d'isolation doit être défini AVANT le BEGIN TRANSACTION
 SET TRANSACTION ISOLATION LEVEL SNAPSHOT;
+BEGIN TRANSACTION;
 -- Opérations...
 COMMIT;
 ```
+
+> ⚠️ Pour le niveau **SNAPSHOT** en particulier, le `SET TRANSACTION ISOLATION LEVEL SNAPSHOT` doit impérativement être exécuté **avant** le `BEGIN TRANSACTION`. Tenter de basculer en SNAPSHOT alors qu'une transaction est déjà ouverte échoue avec l'erreur **Msg 3951**.
 
 ### Vérifier le niveau actuel
 
@@ -532,10 +543,10 @@ Dans les sections suivantes, nous allons explorer chaque niveau d'isolation en d
 - Performances très faibles, à utiliser rarement
 
 ### 6.4.6 SNAPSHOT ISOLATION
-- L'approche moderne de l'isolation maximale
-- Mêmes garanties que SERIALIZABLE sans blocage
+- L'approche moderne de l'isolation forte, **sans blocage en lecture**
+- Bloque les trois anomalies classiques (dirty, non-repeatable, phantom)
+- **Proche** de SERIALIZABLE, mais avec une sémantique différente : le *write skew* y reste possible
 - Utilise le versioning (tempdb)
-- Alternative recommandée à SERIALIZABLE
 
 ---
 
@@ -556,8 +567,8 @@ Il n'existe **pas de niveau parfait**. Chaque niveau est un compromis :
 ### 3. Les niveaux modernes sont préférables
 
 Quand possible, préférez les niveaux basés sur le **versioning** (RCSI, SNAPSHOT) aux niveaux basés uniquement sur les **verrous** :
-- RCSI > READ COMMITTED classique
-- SNAPSHOT > SERIALIZABLE
+- RCSI : lectures sans blocage, là où READ COMMITTED classique pose des verrous
+- SNAPSHOT : vue cohérente sans blocage, là où SERIALIZABLE bloque massivement (tout en gardant à l'esprit leurs différences de sémantique)
 
 ### 4. La transaction courte est essentielle
 

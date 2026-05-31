@@ -103,8 +103,8 @@ DELETE rapides            DELETE acceptables        DELETE très lents
 - Applications **OLTP** (transactionnelles : e-commerce, ERP) → Peu d'index (2-5 par table)
 - Applications **OLAP** (analytiques : datawarehouse, BI) → Beaucoup d'index (10-30 par table)
 
-**OLTP** = Online Transaction Processing (beaucoup d'écritures)
-**OLAP** = Online Analytical Processing (surtout des lectures)
+**OLTP** = Online Transaction Processing (beaucoup d'écritures)  
+**OLAP** = Online Analytical Processing (surtout des lectures)  
 
 ## Vue d'ensemble des concepts à découvrir
 

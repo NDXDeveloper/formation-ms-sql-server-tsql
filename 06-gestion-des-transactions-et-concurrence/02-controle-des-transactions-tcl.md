@@ -192,7 +192,7 @@ ROLLBACK; -- Les deux échouent ensemble
 
 **Avantages :**
 - ✅ Les deux opérations forment une unité
-- ✅ En cas d'erreur, tout est annulé automatiquement
+- ✅ En cas d'erreur, vous pouvez tout annuler d'un coup avec `ROLLBACK` (via `TRY...CATCH` ou `SET XACT_ABORT ON` — l'annulation n'est **pas** automatique sur une simple erreur d'exécution)
 - ✅ En cas de crash, SQL Server annule automatiquement au redémarrage
 - ✅ État toujours cohérent
 
@@ -404,8 +404,8 @@ END CATCH;
 
 **Ce pattern garantit :**
 - ✅ Démarrage explicite avec BEGIN TRANSACTION
-- ✅ Validation automatique en cas de succès
-- ✅ Annulation automatique en cas d'erreur
+- ✅ Validation explicite en cas de succès (COMMIT dans le bloc TRY)
+- ✅ Annulation en cas d'erreur (le bloc CATCH déclenche le ROLLBACK)
 - ✅ Gestion propre des erreurs
 - ✅ Logging pour le débogage
 
@@ -461,7 +461,7 @@ BEGIN TRANSACTION;
 COMMIT; -- Et si une erreur survient ?
 ```
 
-TRY...CATCH garantit le ROLLBACK automatique en cas d'erreur.
+Le pattern `TRY...CATCH` permet d'annuler la transaction en cas d'erreur — à condition d'**écrire le `ROLLBACK` dans le bloc `CATCH`** (comme ci-dessus). Ce qui est automatique, c'est le *passage* dans le `CATCH` quand une erreur survient ; l'annulation, elle, n'est pas implicite : sans ce `ROLLBACK`, la transaction resterait ouverte.
 
 ### 4. Surveillez @@TRANCOUNT
 
@@ -574,7 +574,7 @@ BEGIN TRANSACTION;
 ```sql
 -- Aucune transaction active
 UPDATE MaTable SET Col = 'Valeur';
-COMMIT; -- ⚠️ Inutile mais pas d'erreur
+COMMIT; -- ⚠️ ERREUR 3902 : aucun BEGIN TRANSACTION correspondant (@@TRANCOUNT = 0)
 ```
 
 ### ❌ Transactions Trop Longues

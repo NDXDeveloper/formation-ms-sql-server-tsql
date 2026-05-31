@@ -20,6 +20,10 @@ Cette section 8 va maintenant **élargir vos horizons** en explorant des sujets 
 - Sécuriser vos bases de données
 - Comprendre la haute disponibilité
 - S'adapter au cloud computing
+- Accélérer l'analytique avec les index columnstore
+- Rechercher efficacement dans le texte (recherche plein texte)
+- Manipuler des données géographiques (types spatiaux)
+- Atteindre des débits transactionnels extrêmes (In-Memory OLTP)
 
 Ces sujets vous permettront de **compléter votre boîte à outils** et d'être prêt à affronter les défis variés du monde réel.
 
@@ -40,7 +44,7 @@ Ces sujets sont qualifiés de "complémentaires" car :
 
 ## Vue d'ensemble de la section 8
 
-Cette section est organisée en **six grandes thématiques** :
+Cette section est organisée en **dix grandes thématiques** :
 
 ```
 8. Sujets Complémentaires et Écosystème
@@ -60,8 +64,20 @@ Cette section est organisée en **six grandes thématiques** :
 ├── 8.5 Concepts de Haute Disponibilité (HA/DR)
 │   └── Garantir la continuité de service
 │
-└── 8.6 SQL Server et le Cloud (Azure)
-    └── SQL Server dans l'écosystème Azure
+├── 8.6 SQL Server et le Cloud (Azure)
+│   └── SQL Server dans l'écosystème Azure
+│
+├── 8.7 Index Columnstore
+│   └── Analytique et entrepôts de données
+│
+├── 8.8 Recherche plein texte (Full-Text Search)
+│   └── Recherche linguistique dans le texte
+│
+├── 8.9 Types spatiaux (GEOMETRY / GEOGRAPHY)
+│   └── Données géographiques et géométriques
+│
+└── 8.10 In-Memory OLTP
+    └── Débit transactionnel extrême (tables en mémoire)
 ```
 
 Explorons maintenant chacune de ces thématiques.
@@ -204,15 +220,15 @@ Dans la section 8.4, vous découvrirez :
 
 ### Qu'est-ce que la Haute Disponibilité ?
 
-**HA** (High Availability) = Garantir que votre base de données reste **accessible** même en cas de problème
-**DR** (Disaster Recovery) = Pouvoir **récupérer** vos données après un incident majeur
+**HA** (High Availability) = Garantir que votre base de données reste **accessible** même en cas de problème  
+**DR** (Disaster Recovery) = Pouvoir **récupérer** vos données après un incident majeur  
 
 ### Pourquoi c'est important ?
 
 Dans le monde professionnel, les temps d'arrêt coûtent cher :
 - **E-commerce** : Chaque minute d'indisponibilité = perte de revenus
 - **Services critiques** : Banques, hôpitaux, services d'urgence ne peuvent pas s'arrêter
-- **SLA** (Service Level Agreement) : Engagements contractuels de disponibilité (99.9%, 99.99%, etc.)
+- **SLA** (Service Level Agreement) : Engagements contractuels de disponibilité (99,9%, 99,99%, etc.)
 - **Réputation** : Les pannes nuisent à l'image de l'entreprise
 
 ### Ce que vous apprendrez
@@ -276,13 +292,97 @@ Dans la section 8.6, vous découvrirez :
 
 **Compétence clé** : Comprendre l'écosystème Azure et faire des choix éclairés pour vos projets.
 
+## 8.7 - Index Columnstore
+
+### Qu'est-ce qu'un index columnstore ?
+
+Les **index columnstore** stockent les données **par colonne** (et non par ligne), avec une **compression** très élevée. Ils sont la technologie de référence pour l'**analytique** et les **entrepôts de données** sous SQL Server, offrant des gains de **10× à 100×** sur les requêtes d'agrégation portant sur de grands volumes.
+
+### Pourquoi c'est important ?
+
+- **Analytique rapide** : Calculer un chiffre d'affaires sur des centaines de millions de lignes en quelques secondes
+- **Compression** : Réduire massivement l'espace de stockage (souvent 10×)
+- **HTAP** : Combiner transactionnel et analytique en temps réel sur les mêmes données
+
+### Ce que vous apprendrez
+
+Dans la section 8.7, vous découvrirez :
+- Le **stockage en colonnes** vs en lignes et pourquoi il change tout
+- Les index columnstore **cluster (CCI)** et **non-cluster (NCCI)**
+- Le **mode batch**, les cas d'usage et les limites
+
+**Compétence clé** : Accélérer drastiquement les requêtes analytiques sur de grandes tables.
+
+## 8.8 - Recherche plein texte (Full-Text Search)
+
+### Qu'est-ce que la recherche plein texte ?
+
+La **recherche plein texte** (Full-Text Search) permet une recherche **linguistique** dans de grandes quantités de texte : formes fléchies, synonymes, proximité de mots et **pertinence** des résultats — bien au-delà des possibilités de `LIKE`.
+
+### Pourquoi c'est important ?
+
+- **Moteurs de recherche internes** : Rechercher dans des articles, descriptions, documents
+- **Performance** : Index dédié, bien plus rapide que `LIKE '%...%'`
+- **Documents** : Indexer le contenu de fichiers PDF, Word, etc. (via iFilters)
+
+### Ce que vous apprendrez
+
+Dans la section 8.8, vous découvrirez :
+- Les **catalogues** et **index de texte intégral**
+- Les prédicats **CONTAINS** et **FREETEXT** (et les fonctions de classement par pertinence)
+- Les capacités linguistiques (racinisation, thésaurus, mots vides)
+
+**Compétence clé** : Implémenter une vraie recherche textuelle intégrée à SQL Server.
+
+## 8.9 - Types spatiaux (GEOMETRY et GEOGRAPHY)
+
+### Qu'est-ce que les données spatiales ?
+
+Les **types spatiaux** `GEOMETRY` (plan plat) et `GEOGRAPHY` (Terre courbe) permettent de stocker et d'interroger des **positions**, **formes** et **distances** : « quels magasins à moins de 5 km ? », « cette adresse est-elle dans la zone de livraison ? ».
+
+### Pourquoi c'est important ?
+
+- **Géolocalisation** : Recherche de proximité, zones de service, géofencing
+- **Calculs corrects** : Distances réelles sur la Terre (en mètres), sans trigonométrie manuelle
+- **Cartographie / SIG** : Stocker territoires, parcelles, itinéraires
+
+### Ce que vous apprendrez
+
+Dans la section 8.9, vous découvrirez :
+- La différence entre **GEOMETRY** et **GEOGRAPHY** et la notion de **SRID**
+- Les **méthodes spatiales** (STDistance, STIntersects, STBuffer…)
+- Les **index spatiaux** pour des requêtes géographiques rapides
+
+**Compétence clé** : Manipuler des données géographiques directement dans SQL Server.
+
+## 8.10 - In-Memory OLTP (tables à mémoire optimisée)
+
+### Qu'est-ce que l'In-Memory OLTP ?
+
+L'**In-Memory OLTP** (nom de code *Hekaton*, depuis SQL Server 2014) repose sur des **tables à mémoire optimisée** (en RAM, sans verrou) et des **procédures compilées nativement**. Il vise les charges transactionnelles à **très fort débit** freinées par la **contention** des verrous, avec des gains pouvant atteindre **10× à 30×**.
+
+### Pourquoi c'est important ?
+
+- **Débit extrême** : Ingestion haute fréquence (IoT, clics, capteurs), files d'attente
+- **Sans contention** : Modèle optimiste multi-version (MVCC), sans verrous ni latches
+- **Sessions / staging** : Tables ultra-rapides et jetables (`DURABILITY = SCHEMA_ONLY`)
+
+### Ce que vous apprendrez
+
+Dans la section 8.10, vous découvrirez :
+- Les **tables à mémoire optimisée** et la concurrence optimiste (MVCC)
+- Les **procédures stockées compilées nativement**
+- Les **cas d'usage** et les **limites** à connaître
+
+**Compétence clé** : Identifier et traiter un point chaud de contention transactionnelle.
+
 ## Comment aborder cette section ?
 
 ### Approche recommandée
 
 Cette section est différente des précédentes car les sujets sont **indépendants** les uns des autres. Vous pouvez :
 
-1. **Parcourir dans l'ordre** : Suivre la progression naturelle (XML → JSON → Temporelles → Sécurité → HA → Cloud)
+1. **Parcourir dans l'ordre** : Suivre la progression naturelle (XML → JSON → Temporelles → Sécurité → HA → Cloud → Columnstore → Full-Text → Spatial → In-Memory OLTP)
 2. **Aller directement aux sujets qui vous intéressent** : Besoin de JSON ? Allez directement à 8.2
 3. **Revenir plus tard** : Certains sujets peuvent être réservés pour quand vous en aurez besoin dans un projet
 
@@ -302,6 +402,12 @@ Si vous devez prioriser, voici une suggestion basée sur les besoins actuels du 
 **Priorité CONCEPTUELLE** (bon à connaître) :
 - 📖 **8.5 Haute Disponibilité** : Comprendre les concepts, même si vous ne configurez pas
 
+**Priorité SPÉCIALISÉE** (selon les besoins du projet) :
+- 🎯 **8.7 Index Columnstore** : Incontournable pour l'analytique et les entrepôts de données
+- 🎯 **8.8 Recherche plein texte** : Pour les moteurs de recherche internes
+- 🎯 **8.9 Types spatiaux** : Pour la géolocalisation et la cartographie
+- 🎯 **8.10 In-Memory OLTP** : Pour les points chauds transactionnels à très fort débit
+
 ### Temps estimé par section
 
 | Section | Temps de lecture | Temps de pratique suggéré |
@@ -312,6 +418,10 @@ Si vous devez prioriser, voici une suggestion basée sur les besoins actuels du 
 | 8.4 Sécurité | 1-2 heures | 2-3 heures |
 | 8.5 Haute Disponibilité | 30-45 min | Conceptuel |
 | 8.6 Cloud Azure | 45-60 min | Optionnel |
+| 8.7 Index Columnstore | 45-60 min | 1-2 heures |
+| 8.8 Recherche plein texte | 30-45 min | 1 heure |
+| 8.9 Types spatiaux | 30-45 min | 1 heure |
+| 8.10 In-Memory OLTP | 45-60 min | Conceptuel / 1 heure |
 
 ## Prérequis pour cette section
 
@@ -454,8 +564,8 @@ Pour approfondir ces sujets, voici des ressources recommandées :
 
 ### Documentation officielle Microsoft
 - **Microsoft Learn** : Parcours d'apprentissage gratuits
-- **SQL Server Documentation** : docs.microsoft.com/sql
-- **Azure Documentation** : docs.microsoft.com/azure
+- **SQL Server Documentation** : learn.microsoft.com/sql
+- **Azure Documentation** : learn.microsoft.com/azure
 
 ### Sites et outils
 - **JSON.org** : Spécification JSON complète

@@ -320,7 +320,7 @@ SQL Server propose plusieurs technologies pour répondre à différents besoins 
 - Basculement manuel uniquement
 - Simple et économique
 
-**Idéal pour :** DR à distance avec budget limité (fonctionne avec toutes les éditions)
+**Idéal pour :** DR à distance avec budget limité (fonctionne avec les éditions Web, Standard et Enterprise)
 
 *Détaillé dans la section 8.5.3*
 
@@ -434,7 +434,7 @@ Tests recommandés :
 - **Annuels** : Simulation de catastrophe complète
 
 **Citation célèbre :**
-> "Everybody has a plan until they get punched in the mouth."
+> "Everybody has a plan until they get punched in the mouth."  
 > *– Mike Tyson*
 
 Votre plan DR doit être testé sous pression, pas découvert pendant une vraie panne !

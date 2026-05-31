@@ -201,7 +201,7 @@ WHERE Statut = 'En cours';  -- ← Clause WHERE !
 
 ### 3. Colonnes Incluses : INCLUDE (Section 7.2.3)
 
-**Problème résolu** : Key Lookups coûteux, limite de 900 octets sur les colonnes clés.
+**Problème résolu** : Key Lookups coûteux, et limite de taille des colonnes clés (900 octets pour un index clustered, 1700 octets pour un non-clustered depuis SQL Server 2016).
 
 **Concept** :
 ```sql

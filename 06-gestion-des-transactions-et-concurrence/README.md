@@ -109,8 +109,8 @@ ROLLBACK; -- Tout est annulé, retour à l'état initial
 
 **SAVE TRANSACTION** - Points de sauvegarde
 ```sql
-SAVE TRANSACTION MonPoint; -- Créer un checkpoint
-ROLLBACK TRANSACTION MonPoint; -- Revenir au checkpoint
+SAVE TRANSACTION MonPoint; -- Créer un point de sauvegarde
+ROLLBACK TRANSACTION MonPoint; -- Revenir au point de sauvegarde
 ```
 
 **Transactions implicites vs explicites**
@@ -140,13 +140,13 @@ Vous comprendrez comment SQL Server gère les accès simultanés :
 
 Vous maîtriserez le réglage fin de l'isolation :
 
-**Les six niveaux d'isolation**
+**Les six comportements d'isolation étudiés** (cinq niveaux au sens de `SET TRANSACTION ISOLATION LEVEL`, plus la variante RCSI)
 - READ UNCOMMITTED (le moins strict)
 - READ COMMITTED (défaut)
-- READ COMMITTED SNAPSHOT
+- READ COMMITTED SNAPSHOT — *RCSI : variante de READ COMMITTED, activée comme option de base de données*
 - REPEATABLE READ
-- SERIALIZABLE (le plus strict)
-- SNAPSHOT ISOLATION
+- SERIALIZABLE (le plus strict par verrous)
+- SNAPSHOT ISOLATION (le plus strict par versioning)
 
 **Comment choisir le bon niveau**
 - Équilibre entre performance et protection

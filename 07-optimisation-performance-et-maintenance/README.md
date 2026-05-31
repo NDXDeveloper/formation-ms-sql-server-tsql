@@ -96,26 +96,22 @@ Les compétences de ce chapitre peuvent faire la différence
 entre 45k€ et 65k€ de salaire.
 ```
 
-## Les 7 Piliers de l'Optimisation
+## Les 8 Piliers de l'Optimisation et de la Fiabilité
 
-Ce chapitre est organisé autour de **7 sections** qui couvrent tous les aspects de l'optimisation :
+Ce chapitre est organisé autour de **8 sections** qui couvrent tous les aspects de la performance **et** de la fiabilité d'une base de données :
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                   OPTIMISATION                      │
+│            PERFORMANCE   +   FIABILITÉ              │
 └─────────────────────────────────────────────────────┘
                           │
-        ┌─────────────────┼─────────────────┐
-        │                 │                 │
-        ▼                 ▼                 ▼
-    INDEX           REQUÊTES          MAINTENANCE
-  (7.1, 7.2)          (7.6)             (7.7)
-        │                 │                 │
-        └─────────────────┼─────────────────┘
-                          │
-                          ▼
-                    PERFORMANCE
+   ┌──────────┬───────────┼───────────┬──────────────┐
+   ▼          ▼           ▼           ▼              ▼
+ INDEX    DIAGNOSTIC   REQUÊTES   MAINTENANCE   SAUVEGARDE
+(7.1,7.2) (7.3·7.4·7.5)  (7.6)       (7.7)         (7.8)
 ```
+
+> Les sept premières sections rendent la base **rapide** ; la dernière (7.8) la rend **survivante**. Une base performante mais non sauvegardée reste une base à risque.
 
 ### Vue d'ensemble des sections
 
@@ -128,6 +124,7 @@ Ce chapitre est organisé autour de **7 sections** qui couvrent tous les aspects
 | **7.5** | Query Store | ⚡⚡⚡⚡ | ⭐⭐ |
 | **7.6** | Bonnes pratiques T-SQL | ⚡⚡⚡⚡ | ⭐⭐ |
 | **7.7** | Maintenance et Intégrité | ⚡⚡⚡ | ⭐⭐ |
+| **7.8** | Sauvegarde et Restauration | ⚡⚡⚡⚡⚡ | ⭐⭐⭐ |
 
 ## Section 7.1 : Index - Concepts Fondamentaux
 
@@ -244,15 +241,18 @@ Les plans d'exécution sont votre **fenêtre** sur la façon dont SQL Server ex�
 - Plan estimé vs plan réel
 - Comment activer les plans d'exécution
 
-#### 7.3.2 Lecture d'un plan graphique
+#### 7.3.2 Lecture conceptuelle d'un plan graphique
 - Lecture de droite à gauche, de haut en bas
-- Opérateurs clés : Seek vs Scan, Loop vs Hash vs Merge Join
-- Pourcentages de coût
-- Identification des goulots d'étranglement
+- Pourcentages de coût des opérateurs
+- Épaisseur des flèches (nombre de lignes)
 
-#### 7.3.3 Optimisation basée sur les plans
-- Identifier les Table Scan à convertir en Index Seek
-- Repérer les Key Lookup excessifs
+#### 7.3.3 Opérateurs clés
+- Index Seek vs Index Scan vs Table Scan
+- Nested Loops vs Hash Match vs Merge Join
+- Key Lookup et comment l'éliminer
+
+#### 7.3.4 Identification des goulots d'étranglement
+- Repérer les opérateurs les plus coûteux
 - Index manquants suggérés
 - Cas pratiques d'optimisation
 
@@ -316,10 +316,13 @@ Query Store est une fonctionnalité moderne et puissante de SQL Server.
 
 #### 7.5.2 Identification des régressions
 - Requêtes qui se sont dégradées
-- Comparaison avant/après
-- Forcer un plan d'exécution
+- Comparaison avant/après d'un plan
 
-#### 7.5.3 Analyse historique
+#### 7.5.3 Forcer un plan d'exécution
+- `sp_query_store_force_plan` / `unforce_plan`
+- Quand (et quand ne pas) forcer un plan
+
+#### 7.5.4 Analyse historique
 - Tendances de performance dans le temps
 - Top requêtes consommatrices
 - Monitoring proactif
@@ -359,11 +362,7 @@ Au-delà des index, la façon dont vous écrivez vos requêtes a un impact énor
 - Impact sur les plans d'exécution
 - Exceptions acceptables
 
-#### 7.6.4 Autres bonnes pratiques
-- EXISTS vs IN vs JOIN
-- UNION vs UNION ALL
-- Sous-requêtes corrélées : quand éviter
-- Pagination efficace (OFFSET/FETCH)
+> **Note** : d'autres bonnes pratiques de requêtage connexes — `EXISTS` vs `IN` vs `JOIN`, `UNION` vs `UNION ALL`, sous-requêtes corrélées, pagination `OFFSET/FETCH` — sont traitées au **chapitre 4 (Techniques de requêtage avancées)**. La section 7.6 se concentre ici sur la SARGability, les fonctions dans `WHERE` et `SELECT *`.
 
 **Total section 7.6** : 1.5-2 heures
 
@@ -401,11 +400,6 @@ Une base de données nécessite une maintenance régulière pour rester performa
 - Importance pour la fiabilité
 - Fréquence recommandée
 
-#### 7.7.4 Stratégies de maintenance
-- Plans de maintenance automatisés
-- Fenêtres de maintenance
-- Monitoring de la santé de la base
-
 **Total section 7.7** : 1-1.5 heure
 
 ### Compétences acquises
@@ -415,6 +409,52 @@ Une base de données nécessite une maintenance régulière pour rester performa
 - ✅ Choisir entre REBUILD et REORGANIZE
 - ✅ Vérifier l'intégrité de la base de données
 - ✅ Mettre en place une stratégie de maintenance
+
+## Section 7.8 : Sauvegarde et Restauration
+
+### La compétence la plus critique
+
+On survit à une requête lente ou à un index mal conçu. On ne survit pas toujours à une **perte de données définitive**. Cette section couvre la protection des données : `BACKUP`, `RESTORE`, et la stratégie qui garantit qu'on saura récupérer le jour d'un incident.
+
+### Ce que vous apprendrez
+
+#### 7.8.1 Modèles de récupération
+- `FULL`, `SIMPLE`, `BULK_LOGGED`
+- Rôle du journal des transactions et de sa troncature
+- Quel modèle choisir selon le besoin
+
+#### 7.8.2 Types de sauvegarde
+- Complète, différentielle (cumulative), journal
+- La chaîne de sauvegarde (LSN) et `COPY_ONLY`
+
+#### 7.8.3 BACKUP DATABASE et BACKUP LOG
+- Syntaxe et options de production (`INIT`, `COMPRESSION`, `CHECKSUM`)
+- La sauvegarde de fin de journal (*tail-log*)
+- Vérifier ses sauvegardes (`RESTORE VERIFYONLY`)
+
+#### 7.8.4 RESTORE et séquence de restauration
+- `WITH NORECOVERY` / `RECOVERY` / `STANDBY`
+- Empiler complète → différentielle → journaux dans l'ordre
+- `REPLACE`, `MOVE`
+
+#### 7.8.5 Restauration à un instant T (PITR)
+- Récupérer juste avant une erreur avec `STOPAT`
+- `STOPATMARK` / `STOPBEFOREMARK`
+
+#### 7.8.6 Stratégie de sauvegarde (RTO, RPO)
+- Calculer sa stratégie à partir du RPO et du RTO
+- Règle 3-2-1, rétention (GFS), automatisation
+- **Tester ses restaurations**
+
+**Total section 7.8** : 2-2.5 heures
+
+### Compétences acquises
+
+À la fin de 7.8, vous saurez :
+- ✅ Choisir le bon modèle de récupération
+- ✅ Concevoir une stratégie de sauvegarde complète/différentielle/journal
+- ✅ Restaurer une base correctement, y compris à un instant précis
+- ✅ Dimensionner la stratégie à partir du RPO et du RTO
 
 ## Progression Recommandée
 
@@ -446,6 +486,10 @@ Ce chapitre suit une **logique pédagogique** :
 Étape 6 : MAINTENANCE (7.7)
           ↓
      Garder les performances dans le temps
+
+Étape 7 : SAUVEGARDE (7.8)
+          ↓
+     Protéger les données et savoir les restaurer
 ```
 
 ### Recommandations
@@ -479,7 +523,8 @@ Ce chapitre suit une **logique pédagogique** :
 | 7.5 Query Store | 1-1.5h | ⭐⭐⭐ |
 | 7.6 Bonnes pratiques | 1.5-2h | ⭐⭐⭐⭐ |
 | 7.7 Maintenance | 1-1.5h | ⭐⭐⭐ |
-| **TOTAL** | **10-14h** | - |
+| 7.8 Sauvegarde et Restauration | 2-2.5h | ⭐⭐⭐⭐⭐ |
+| **TOTAL** | **12-16h** | - |
 
 C'est un investissement de temps significatif, mais les compétences acquises vous serviront **toute votre carrière**.
 
@@ -645,6 +690,7 @@ Comprenez :
 - ✅ Maintenir des statistiques à jour
 - ✅ Vérifier l'intégrité de la base
 - ✅ Mettre en place une stratégie de maintenance
+- ✅ Protéger les données : sauvegarder, restaurer, récupérer à un instant précis
 
 ### 💼 Apporter de la valeur en entreprise
 
@@ -731,13 +777,17 @@ ON Ventes (DateVente, Region);
 
 **Après** :
 ```sql
--- Désactivation temporaire des index
-ALTER INDEX ALL ON MaTable DISABLE;
+-- Désactivation temporaire des index NON-CLUSTERED uniquement
+-- ⚠️ Ne désactivez JAMAIS l'index clustered : cela rendrait TOUTE la table
+--    inaccessible (lecture ET écriture) tant qu'il n'est pas reconstruit —
+--    le BULK INSERT échouerait. On cible donc chaque index non-clustered.
+ALTER INDEX IX_MaTable_Colonne1 ON MaTable DISABLE;
+ALTER INDEX IX_MaTable_Colonne2 ON MaTable DISABLE;
 
--- Import rapide
-BULK INSERT MaTable FROM 'data.csv' ...;
+-- Import rapide (TABLOCK favorise une journalisation minimale)
+BULK INSERT MaTable FROM 'data.csv' WITH (TABLOCK);
 
--- Reconstruction des index
+-- Reconstruction des index (ici ALL est sans danger : REBUILD réactive tout)
 ALTER INDEX ALL ON MaTable REBUILD;
 
 -- Performance :
@@ -764,28 +814,38 @@ CHAPITRE 7 : OPTIMISATION, PERFORMANCE ET MAINTENANCE
 │
 ├─ 7.3 PLANS D'EXÉCUTION ⭐⭐⭐⭐⭐
 │  ├─ 7.3.1 Qu'est-ce qu'un plan d'exécution ?
-│  ├─ 7.3.2 Lecture d'un plan graphique
-│  └─ 7.3.3 Identification des goulots d'étranglement
+│  ├─ 7.3.2 Lecture conceptuelle d'un plan graphique
+│  ├─ 7.3.3 Opérateurs clés (Seek/Scan, Loop/Hash/Merge)
+│  └─ 7.3.4 Identification des goulots d'étranglement
 │
 ├─ 7.4 STATISTIQUES ⭐⭐⭐
 │  ├─ 7.4.1 Rôle des statistiques
 │  ├─ 7.4.2 Création et mise à jour
-│  └─ 7.4.3 Parameter Sniffing
+│  └─ 7.4.3 Problèmes de statistiques obsolètes (Parameter Sniffing)
 │
 ├─ 7.5 QUERY STORE ⭐⭐⭐
 │  ├─ 7.5.1 Introduction
 │  ├─ 7.5.2 Identification des régressions
-│  └─ 7.5.3 Analyse historique
+│  ├─ 7.5.3 Forcer un plan d'exécution
+│  └─ 7.5.4 Analyse historique
 │
 ├─ 7.6 BONNES PRATIQUES T-SQL ⭐⭐⭐⭐
 │  ├─ 7.6.1 Le concept de SARGability
 │  ├─ 7.6.2 Éviter les fonctions dans WHERE
 │  └─ 7.6.3 Éviter SELECT *
 │
-└─ 7.7 MAINTENANCE ET INTÉGRITÉ ⭐⭐⭐
-   ├─ 7.7.1 Fragmentation d'index
-   ├─ 7.7.2 REBUILD vs REORGANIZE
-   └─ 7.7.3 DBCC CHECKDB
+├─ 7.7 MAINTENANCE ET INTÉGRITÉ ⭐⭐⭐
+│  ├─ 7.7.1 Fragmentation d'index
+│  ├─ 7.7.2 REBUILD vs REORGANIZE
+│  └─ 7.7.3 DBCC CHECKDB
+│
+└─ 7.8 SAUVEGARDE ET RESTAURATION ⭐⭐⭐⭐⭐
+   ├─ 7.8.1 Modèles de récupération
+   ├─ 7.8.2 Types de sauvegarde
+   ├─ 7.8.3 BACKUP DATABASE et BACKUP LOG
+   ├─ 7.8.4 RESTORE et séquence de restauration
+   ├─ 7.8.5 Restauration à un instant T (PITR)
+   └─ 7.8.6 Stratégie de sauvegarde (RTO, RPO)
 ```
 
 ## Conseils pour Réussir ce Chapitre
@@ -837,7 +897,7 @@ Vous ne verrez plus jamais une requête de la même manière. Vous développerez
 
 Vous avez maintenant :
 - ✅ Compris l'importance cruciale de l'optimisation
-- ✅ Une vue d'ensemble des 7 sections du chapitre
+- ✅ Une vue d'ensemble des 8 sections du chapitre
 - ✅ Des objectifs clairs et mesurables
 - ✅ Le bon état d'esprit pour réussir
 

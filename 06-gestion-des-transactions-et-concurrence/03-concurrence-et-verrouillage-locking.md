@@ -83,9 +83,9 @@ Nouveau solde = 400€
 ```
 
 **Résultat :**
-- 1200€ ont été retirés (2 × 600€)
-- Le solde final est 400€ au lieu de -200€ (ou le second retrait aurait dû être refusé)
-- **Le compte est découvert de 800€ sans que personne ne s'en rende compte !**
+- 1200€ ont physiquement été retirés (2 × 600€)
+- Mais le solde final affiché est **400€** : la seconde transaction a **écrasé** la mise à jour de la première (les deux avaient lu 1000€ et écrit 400€). C'est une **perte de mise à jour** (*lost update*).
+- La banque a donc décaissé 1200€ tout en n'en comptabilisant que 600€ (solde passé de 1000€ à 400€) : **600€ se sont volatilisés sans que personne ne s'en aperçoive !** De plus, le second retrait — qui aurait dû être refusé pour solde insuffisant — a été autorisé à tort.
 
 ### Les objectifs du contrôle de concurrence
 

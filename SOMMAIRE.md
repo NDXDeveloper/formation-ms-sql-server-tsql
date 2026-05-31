@@ -1,5 +1,8 @@
 # Table des Matières - Formation MS SQL Server et T-SQL
 
+> **Version cible : SQL Server 2022+**
+>
+
 ### 1. [Introduction et Concepts Fondamentaux (Débutant)](01-introduction-et-concepts-fondamentaux/README.md)
 - 1.1 [Qu'est-ce qu'une base de données ?](01-introduction-et-concepts-fondamentaux/01-quest-ce-quune-base-de-donnees.md)
     - 1.1.1 [Définition (données, informations)](01-introduction-et-concepts-fondamentaux/01.1-definition-donnees-informations.md)
@@ -8,7 +11,7 @@
 - 1.2 [Présentation de Microsoft SQL Server](01-introduction-et-concepts-fondamentaux/02-presentation-de-microsoft-sql-server.md)
     - 1.2.1 [Histoire et éditions (Express, Standard, Enterprise, Azure SQL)](01-introduction-et-concepts-fondamentaux/02.1-histoire-et-editions.md)
     - 1.2.2 [Architecture de base : Instance, Services, Bases de données](01-introduction-et-concepts-fondamentaux/02.2-architecture-de-base.md)
-    - 1.2.3 [Outils de gestion : SSMS et Azure Data Studio](01-introduction-et-concepts-fondamentaux/02.3-outils-de-gestion.md)
+    - 1.2.3 [Outils de gestion : SSMS et VS Code (ex-Azure Data Studio)](01-introduction-et-concepts-fondamentaux/02.3-outils-de-gestion.md)
 - 1.3 [Le langage SQL et T-SQL](01-introduction-et-concepts-fondamentaux/03-le-langage-sql-et-tsql.md)
     - 1.3.1 [Qu'est-ce que T-SQL (Transact-SQL) ?](01-introduction-et-concepts-fondamentaux/03.1-quest-ce-que-tsql.md)
     - 1.3.2 [Les sous-langages : DDL, DML, DCL, TCL](01-introduction-et-concepts-fondamentaux/03.2-les-sous-langages.md)
@@ -198,6 +201,13 @@
     - 7.7.1 [Fragmentation d'index (Interne vs. Externe)](07-optimisation-performance-et-maintenance/07.1-fragmentation-index.md)
     - 7.7.2 [L'impact de la maintenance : REBUILD vs. REORGANIZE](07-optimisation-performance-et-maintenance/07.2-impact-maintenance-rebuild-reorganize.md)
     - 7.7.3 [Le concept de DBCC CHECKDB (Intégrité de la base)](07-optimisation-performance-et-maintenance/07.3-dbcc-checkdb.md)
+- 7.8 [Sauvegarde et Restauration (BACKUP / RESTORE)](07-optimisation-performance-et-maintenance/08-sauvegarde-et-restauration.md)
+    - 7.8.1 [Modèles de récupération (FULL, SIMPLE, BULK_LOGGED)](07-optimisation-performance-et-maintenance/08.1-modeles-de-recuperation.md)
+    - 7.8.2 [Types de sauvegarde (complète, différentielle, journal des transactions)](07-optimisation-performance-et-maintenance/08.2-types-de-sauvegarde.md)
+    - 7.8.3 [BACKUP DATABASE et BACKUP LOG](07-optimisation-performance-et-maintenance/08.3-backup-database-et-log.md)
+    - 7.8.4 [RESTORE et séquence de restauration (WITH NORECOVERY / RECOVERY)](07-optimisation-performance-et-maintenance/08.4-restore-et-sequence.md)
+    - 7.8.5 [Restauration à un instant T (Point-in-Time Recovery)](07-optimisation-performance-et-maintenance/08.5-restauration-point-in-time.md)
+    - 7.8.6 [Stratégie de sauvegarde (RTO, RPO) et bonnes pratiques](07-optimisation-performance-et-maintenance/08.6-strategie-rto-rpo.md)
 
 ### 8. [Sujets Complémentaires et Écosystème (Avancé)](08-sujets-complementaires-et-ecosysteme/README.md)
 - 8.1 [Gestion des données XML](08-sujets-complementaires-et-ecosysteme/01-gestion-des-donnees-xml.md)
@@ -227,3 +237,39 @@
     - 8.6.1 [Différences conceptuelles : IaaS (VM) vs PaaS (Azure SQL Database)](08-sujets-complementaires-et-ecosysteme/06.1-iaas-vs-paas.md)
     - 8.6.2 [Azure SQL Managed Instance vs. Single Database (Concepts et limitations)](08-sujets-complementaires-et-ecosysteme/06.2-managed-instance-vs-single-database.md)
     - 8.6.3 [Modèles d'achat (DTU vs. vCore)](08-sujets-complementaires-et-ecosysteme/06.3-modeles-achat-dtu-vcore.md)
+- 8.7 [Index Columnstore (analytique et entrepôt de données)](08-sujets-complementaires-et-ecosysteme/07-index-columnstore.md)
+    - 8.7.1 [Stockage en colonnes vs stockage en lignes](08-sujets-complementaires-et-ecosysteme/07.1-stockage-colonnes-vs-lignes.md)
+    - 8.7.2 [Columnstore cluster (CCI) et non-cluster (NCCI)](08-sujets-complementaires-et-ecosysteme/07.2-columnstore-cluster-non-cluster.md)
+    - 8.7.3 [Cas d'usage, mode batch et limites](08-sujets-complementaires-et-ecosysteme/07.3-cas-usage-batch-mode-limites.md)
+- 8.8 [Recherche plein texte (Full-Text Search)](08-sujets-complementaires-et-ecosysteme/08-recherche-plein-texte.md)
+    - 8.8.1 [Catalogues et index de texte intégral](08-sujets-complementaires-et-ecosysteme/08.1-catalogues-et-index-texte-integral.md)
+    - 8.8.2 [Recherche avec CONTAINS et FREETEXT](08-sujets-complementaires-et-ecosysteme/08.2-contains-et-freetext.md)
+- 8.9 [Types spatiaux (GEOGRAPHY et GEOMETRY)](08-sujets-complementaires-et-ecosysteme/09-types-spatiaux.md)
+    - 8.9.1 [GEOMETRY (plan) vs GEOGRAPHY (ellipsoïde terrestre)](08-sujets-complementaires-et-ecosysteme/09.1-geometry-vs-geography.md)
+    - 8.9.2 [Méthodes spatiales (STDistance, STIntersects…) et index spatiaux](08-sujets-complementaires-et-ecosysteme/09.2-methodes-et-index-spatiaux.md)
+- 8.10 [In-Memory OLTP (tables à mémoire optimisée)](08-sujets-complementaires-et-ecosysteme/10-in-memory-oltp.md)
+    - 8.10.1 [Tables à mémoire optimisée et concurrence optimiste (MVCC)](08-sujets-complementaires-et-ecosysteme/10.1-tables-memoire-optimisee.md)
+    - 8.10.2 [Procédures stockées compilées en mode natif](08-sujets-complementaires-et-ecosysteme/10.2-procedures-compilees-natif.md)
+    - 8.10.3 [Cas d'usage et limites](08-sujets-complementaires-et-ecosysteme/10.3-cas-usage-et-limites.md)
+
+### 📎 Annexes
+
+
+**Annexes pratiques**
+- A. [Guide d'installation (Windows, Docker, Azure)](09-annexes/A-guide-installation.md)
+    - A.1 Installation sur Windows (SQL Server Developer / Express)
+    - A.2 Installation via Docker (conteneur Linux, image `mssql/server:2022`)
+    - A.3 Installation des outils (SSMS, VS Code)
+    - A.4 Première connexion et vérification de l'installation
+- B. [Base de données d'exemple](09-annexes/B-base-exemple/README.md)
+    - B.1 Base « maison » : modèle et script de création (chapitres 1 à 5)
+    - B.2 WideWorldImporters : téléchargement et restauration (chapitres 7 et 8)
+- C. [Exercices et TP corrigés](09-annexes/C-exercices/README.md)
+    - C.1 à C.8 : un jeu d'exercices corrigés pour chaque chapitre
+
+**Annexes de référence**
+- D. [Aide-mémoire T-SQL (cheat sheet)](09-annexes/D-aide-memoire-tsql.md)
+- E. [Tableau récapitulatif des types de données (plages, tailles, précision)](09-annexes/E-types-de-donnees.md)
+- F. [Mots-clés réservés et conventions de nommage](09-annexes/F-mots-cles-et-conventions.md)
+- G. [Glossaire (ACID, B-Tree, SARGability, deadlock…)](09-annexes/G-glossaire.md)
+- H. [Ressources et bibliographie (Microsoft Learn, blogs, communauté)](09-annexes/H-ressources.md)

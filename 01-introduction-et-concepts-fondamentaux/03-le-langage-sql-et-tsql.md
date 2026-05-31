@@ -368,10 +368,10 @@ Après cette formation, vous saurez :
 
 Au-delà du code SQL, vous développerez :
 
-🧠 **Pensée analytique** : Décomposer un problème en requêtes
-📊 **Logique ensembliste** : Raisonner sur des groupes de données
-🔍 **Résolution de problèmes** : Débugger et optimiser
-📚 **Lecture de documentation** : Trouver les bonnes fonctions
+🧠 **Pensée analytique** : Décomposer un problème en requêtes  
+📊 **Logique ensembliste** : Raisonner sur des groupes de données  
+🔍 **Résolution de problèmes** : Débugger et optimiser  
+📚 **Lecture de documentation** : Trouver les bonnes fonctions  
 💬 **Communication** : Traduire des besoins métier en SQL
 
 ### Opportunités professionnelles
@@ -489,7 +489,7 @@ Chaque concept bien maîtrisé est une fondation pour le suivant.
 
 ### 3. Utilisez une vraie base de données
 
-💾 **Installez SQL Server Express et pratiquez sur des vraies tables.**
+💾 **Installez SQL Server Developer (ou Express) et pratiquez sur de vraies tables.**
 
 - Créez une base de données pour un projet personnel
 - Exemple : Gestion de votre collection de films, de vos recettes, de vos finances
@@ -576,8 +576,8 @@ Une compétence qui vous servira pendant **toute votre carrière**.
 
 ### Documentation officielle
 
-📘 **Microsoft Docs - T-SQL**
-- URL : [https://docs.microsoft.com/sql/t-sql/](https://docs.microsoft.com/sql/t-sql/)
+📘 **Microsoft Learn - T-SQL**
+- URL : [https://learn.microsoft.com/sql/t-sql/](https://learn.microsoft.com/sql/t-sql/)
 - Gratuit, complet, avec exemples
 - Référence pour toutes les commandes
 

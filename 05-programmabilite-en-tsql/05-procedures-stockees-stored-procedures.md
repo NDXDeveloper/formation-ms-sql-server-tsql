@@ -53,7 +53,7 @@ Imaginez une application de e-commerce où vous devez créer une commande. Voici
 string sql1 = "INSERT INTO Commandes (ClientID, DateCommande) VALUES (@ClientID, GETDATE())";
 // Exécuter la requête...
 
-string sql2 = "SELECT @@IDENTITY";
+string sql2 = "SELECT SCOPE_IDENTITY()";
 // Récupérer l'ID...
 
 string sql3 = "INSERT INTO DetailsCommande (CommandeID, ProduitID, Quantite, Prix) VALUES (...)";
@@ -141,9 +141,11 @@ GRANT EXECUTE ON SpObtenirSalairesEquipe TO Manager; -- Seulement via la procéd
 ### Problème 3 : Performance et Optimisation
 
 **Sans procédure :**
-- SQL Server doit **analyser, compiler et optimiser** chaque requête à chaque exécution
+- Si les valeurs sont écrites **en dur** dans le texte SQL, chaque variante doit être **analysée et compilée** séparément
+- Le cache peut alors se remplir de nombreux plans à usage unique (*plan cache bloat*)
 - Nombreux aller-retours réseau
-- Plan d'exécution recréé à chaque fois
+
+> 💡 SQL Server met aussi en cache les plans des requêtes ad-hoc : le plan n'est donc pas « détruit » à chaque fois. Le vrai gain d'une procédure (ou d'une requête paramétrée) vient de la **réutilisation d'un plan unique paramétré**. Ce point est détaillé en [5.5.5](/05-programmabilite-en-tsql/05.5-avantages-procedures-stockees.md).
 
 **Avec procédure :**
 - Le plan d'exécution est **créé une fois et mis en cache**
@@ -215,15 +217,18 @@ Modifient les données (INSERT, UPDATE, DELETE).
 CREATE PROCEDURE SpCreerClient
     @Nom VARCHAR(50),
     @Prenom VARCHAR(50),
-    @Email VARCHAR(100)
+    @Email VARCHAR(100),
+    @ClientID INT OUTPUT          -- L'ID généré est renvoyé via OUTPUT
 AS
 BEGIN
     INSERT INTO Clients (Nom, Prenom, Email, DateInscription)
     VALUES (@Nom, @Prenom, @Email, GETDATE());
 
-    RETURN SCOPE_IDENTITY(); -- Retourner l'ID créé
+    SET @ClientID = SCOPE_IDENTITY(); -- L'ID créé passe par OUTPUT, jamais par RETURN
 END;
 ```
+
+> ⚠️ **Pourquoi `OUTPUT` et non `RETURN` ?** `RETURN` ne sert qu'à renvoyer un **code d'état** entier (succès/échec) — voir la section 5.5.3. Il ne faut **pas** s'en servir pour transmettre une donnée comme un ID : d'une part `SCOPE_IDENTITY()` renvoie un `NUMERIC(38,0)` (converti implicitement, avec risque de dépassement de la plage `INT`), d'autre part cela détourne `RETURN` de son rôle. Pour une valeur générée, utilisez toujours un paramètre `OUTPUT`.
 
 **Usage :** Création, mise à jour, suppression de données
 
@@ -285,7 +290,7 @@ END;
 Effectuent des tâches de maintenance ou d'administration.
 
 ```sql
-CREATE PROCEDURE SpNettoyer​LogsAnciens
+CREATE PROCEDURE SpNettoyerLogsAnciens
     @JoursConservation INT = 90
 AS
 BEGIN

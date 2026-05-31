@@ -317,7 +317,7 @@ Les fonctions et les procédures stockées peuvent sembler similaires, mais elle
 | **Modifications de données** | ❌ Non autorisées | ✅ Autorisées (INSERT/UPDATE/DELETE) |
 | **Transactions** | ❌ Pas de BEGIN TRAN | ✅ Peut gérer des transactions |
 | **Paramètres OUTPUT** | ❌ Non | ✅ Oui |
-| **Gestion d'erreurs** | Limitée | ✅ TRY...CATCH complet |
+| **Gestion d'erreurs** | ❌ TRY...CATCH interdit | ✅ TRY...CATCH complet |
 | **Appel depuis une fonction** | ✅ Oui (autre fonction) | ❌ Non |
 
 **Exemple de distinction :**
@@ -415,9 +415,13 @@ Les fonctions ne doivent pas avoir d'effets de bord imprévisibles :
 #### 4. Limitations sur les instructions
 
 Les fonctions ne peuvent pas :
-- Appeler des procédures stockées
-- Utiliser PRINT (dans la plupart des cas)
+- Appeler des procédures stockées (l'instruction `EXEC` d'une procédure est interdite)
+- Utiliser `PRINT`
+- Utiliser des blocs **`TRY...CATCH`** (la gestion structurée des erreurs est interdite dans une fonction)
+- Utiliser **`RAISERROR`** ni **`THROW`** pour lever une erreur applicative
 - Utiliser certaines commandes système
+
+> ⚠️ **Gestion des erreurs :** comme `TRY...CATCH` et `RAISERROR`/`THROW` sont interdits, une fonction ne peut pas signaler proprement une erreur. La seule façon de provoquer un échec depuis une fonction est de déclencher une **erreur d'exécution** (division par zéro, `CAST` invalide…). En pratique, on valide plutôt en amont et on renvoie `NULL` ou une valeur sentinelle. Si vous avez besoin d'une vraie gestion d'erreurs, utilisez une **procédure stockée**.
 
 ### Pourquoi ces limitations ?
 
@@ -518,14 +522,22 @@ RAND()                        → Nombre aléatoire
 3. **Optimisation** : Les fonctions déterministes peuvent être optimisées (résultat mis en cache)
 
 ```sql
--- ✅ Possible : Fonction déterministe
+-- ✅ Possible : expression déterministe → persistable ET indexable
 ALTER TABLE Produits
 ADD PrixTTC AS (PrixHT * 1.20) PERSISTED;
 
--- ❌ Impossible : Fonction non-déterministe
+-- ✅ Possible aussi : colonne calculée NON persistée avec une fonction non-déterministe.
+-- Elle est recalculée à chaque lecture, mais ne peut être ni PERSISTED ni indexée.
 ALTER TABLE Commandes
-ADD DateCreation AS (GETDATE());  -- ERREUR !
+ADD DateCreation AS (GETDATE());
+
+-- ❌ Impossible : PERSISTED exige le déterminisme
+ALTER TABLE Commandes
+ADD DateCreationPersistee AS (GETDATE()) PERSISTED;
+-- Erreur : « Computed column ... cannot be persisted because the column is non-deterministic »
 ```
+
+> 💡 **À retenir :** le déterminisme n'est pas exigé pour *créer* une colonne calculée — il l'est seulement pour la **persister** (`PERSISTED`) ou l'**indexer**. Pour réellement *stocker* une date de création, préférez d'ailleurs une colonne normale avec une contrainte `DEFAULT GETDATE()` plutôt qu'une colonne calculée.
 
 ---
 

@@ -658,10 +658,10 @@ Avant d'exécuter **tout** UPDATE, vérifiez :
 >
 > La différence entre un UPDATE bien fait et un UPDATE raté, c'est souvent une simple clause WHERE.
 >
-> Prenez TOUJOURS le temps de :
-> 1. Réfléchir à ce que vous voulez modifier
-> 2. Tester avec SELECT
-> 3. Utiliser une transaction
+> Prenez TOUJOURS le temps de :  
+> 1. Réfléchir à ce que vous voulez modifier  
+> 2. Tester avec SELECT  
+> 3. Utiliser une transaction  
 > 4. Vérifier le résultat
 >
 > **5 minutes de précaution valent mieux que 5 heures de récupération.**

@@ -65,13 +65,17 @@ BEGIN
         SET Salaire = Salaire * (1 + @Pourcentage / 100)
         WHERE Departement = @Departement;
 
+        -- Capturer @@ROWCOUNT IMMÉDIATEMENT : il est réinitialisé
+        -- par chaque instruction suivante (INSERT, COMMIT...)
+        DECLARE @NbEmployes INT = @@ROWCOUNT;
+
         -- Logging automatique
         INSERT INTO HistoriqueAugmentations (Departement, Pourcentage, Date)
         VALUES (@Departement, @Pourcentage, GETDATE());
 
         COMMIT TRANSACTION;
 
-        PRINT 'Augmentation appliquée : ' + CAST(@@ROWCOUNT AS VARCHAR) + ' employés';
+        PRINT 'Augmentation appliquée : ' + CAST(@NbEmployes AS VARCHAR) + ' employés';
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
@@ -323,7 +327,7 @@ ON Employes
 AFTER UPDATE
 AS
 BEGIN
-    INSERT INTO AuditLog (Table, Action, Date)
+    INSERT INTO AuditLog (NomTable, Action, DateModif)
     SELECT 'Employes', 'UPDATE', GETDATE()
     FROM INSERTED;
 END

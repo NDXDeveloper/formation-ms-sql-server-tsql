@@ -180,15 +180,18 @@ WHERE ClientID IN (SELECT ClientID FROM Commandes);
 #### 3. Sous-requêtes multi-colonnes
 Retournent **plusieurs colonnes** (peuvent retourner plusieurs lignes aussi).
 
+⚠️ **Important** : contrairement à d'autres SGBD (PostgreSQL, MySQL), **SQL Server ne supporte PAS** la comparaison de plusieurs colonnes via un constructeur de lignes du type `WHERE (Prix, CategorieID) IN (SELECT MAX(Prix), CategorieID ...)`. En T-SQL, on exprime cette comparaison multi-colonnes avec une **jointure sur une table dérivée** (ou avec `EXISTS`) :
+
 ```sql
--- Exemple : Comparer plusieurs colonnes simultanément
-SELECT NomProduit, Prix, CategorieID
-FROM Produits
-WHERE (Prix, CategorieID) IN (
-    SELECT MAX(Prix), CategorieID
+-- Exemple : le produit le plus cher de chaque catégorie
+SELECT P.NomProduit, P.Prix, P.CategorieID
+FROM Produits P
+INNER JOIN (
+    SELECT CategorieID, MAX(Prix) AS MaxPrix
     FROM Produits
     GROUP BY CategorieID
-);
+) M ON P.CategorieID = M.CategorieID
+   AND P.Prix = M.MaxPrix;
 ```
 
 #### 4. Sous-requêtes table (Tables dérivées)
@@ -483,14 +486,31 @@ FROM Clients
 WHERE ClientID = (SELECT ClientID FROM Commandes);  -- Erreur si plusieurs résultats
 ```
 
-### 4. Attention aux valeurs NULL
+### 4. Attention aux valeurs NULL (piège du `NOT IN`)
+
+C'est l'un des pièges les plus dangereux en SQL. Si la sous-requête d'un `NOT IN` renvoie **ne serait-ce qu'une seule valeur NULL**, alors la condition `NOT IN` vaut `UNKNOWN` pour **toutes** les lignes → la requête ne retourne **aucun résultat** !
 
 ```sql
--- Peut ne retourner aucun résultat si la sous-requête contient des NULL
+-- ⚠️ Si UN SEUL ClientID de Commandes est NULL,
+-- cette requête renvoie un résultat VIDE (et non les clients sans commande) :
 SELECT NomClient
 FROM Clients
-WHERE ClientID NOT IN (SELECT ClientID FROM Commandes WHERE ClientID IS NULL);
+WHERE ClientID NOT IN (SELECT ClientID FROM Commandes);
 ```
+
+```sql
+-- ✅ Solution 1 : exclure explicitement les NULL de la sous-requête
+SELECT NomClient
+FROM Clients
+WHERE ClientID NOT IN (SELECT ClientID FROM Commandes WHERE ClientID IS NOT NULL);
+
+-- ✅ Solution 2 (recommandée) : NOT EXISTS, insensible aux NULL
+SELECT NomClient
+FROM Clients C
+WHERE NOT EXISTS (SELECT 1 FROM Commandes CMD WHERE CMD.ClientID = C.ClientID);
+```
+
+> À l'inverse, `IN` (sans `NOT`) n'est pas affecté de la même manière : un NULL dans la liste n'élimine pas les correspondances réelles, il empêche seulement les non-correspondances de devenir `TRUE`.
 
 ## Plan des sections suivantes
 

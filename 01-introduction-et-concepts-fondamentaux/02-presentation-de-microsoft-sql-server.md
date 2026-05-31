@@ -269,9 +269,9 @@ Voici comment s'organisent les différents éléments :
           │                 │                 │
           ▼                 ▼                 ▼
     ┌──────────┐      ┌──────────┐     ┌──────────┐
-    │  SSMS    │      │  Azure   │     │  App     │
-    │  (Admin) │      │  Data    │     │  .NET    │
-    │          │      │  Studio  │     │  Web     │
+    │  SSMS    │      │ VS Code  │     │  App     │
+    │  (Admin) │      │ (+MSSQL) │     │  .NET    │
+    │          │      │          │     │  Web     │
     └──────────┘      └──────────┘     └──────────┘
 
     Administrateur   Développeur      Application
@@ -364,8 +364,8 @@ Pour mieux comprendre SQL Server, comparons-le brièvement à ses principaux con
 
 | Critère | SQL Server | Oracle | MySQL | PostgreSQL |
 |---------|------------|--------|-------|------------|
-| **Éditeur** | Microsoft | Oracle | Oracle (anciennement libre) | Open Source |
-| **Coût** | Payant (Express gratuit) | Très cher | Gratuit/Payant | Gratuit |
+| **Éditeur** | Microsoft | Oracle | Oracle (Community GPL) | Open Source |
+| **Coût** | Payant (Express/Developer gratuits) | Très cher | Gratuit/Payant | Gratuit |
 | **Plateformes** | Windows, Linux | Multi | Multi | Multi |
 | **Facilité** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
 | **Performance** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
@@ -401,7 +401,7 @@ Vous comprendrez :
 ### 1.2.3 Outils de gestion
 Vous maîtriserez :
 - **SQL Server Management Studio (SSMS)** : l'outil complet
-- **Azure Data Studio** : l'outil moderne multi-plateforme
+- **Visual Studio Code + extension MSSQL** : l'outil moderne multiplateforme (successeur d'Azure Data Studio, retiré en 2026)
 - Comment se **connecter** à une instance
 - Comment **naviguer** dans l'interface
 - Les **raccourcis** essentiels
@@ -412,13 +412,13 @@ Avant de plonger dans les détails techniques, assurez-vous d'avoir :
 
 ### Matériel minimum
 
-**Pour installer SQL Server Express (apprentissage) :**
+**Pour installer SQL Server (Developer ou Express, apprentissage) :**
 - 💻 Processeur : 1,4 GHz minimum (2 GHz+ recommandé)
 - 🧠 RAM : 2 Go minimum (4 Go+ recommandé)
 - 💾 Disque : 6 Go d'espace libre minimum
 - 🖥️ Système : Windows 10, Windows 11, Windows Server 2016+
 
-**Pour installer SSMS ou Azure Data Studio :**
+**Pour installer SSMS ou VS Code :**
 - Environ 1 Go d'espace libre supplémentaire
 
 ### Connaissances de base

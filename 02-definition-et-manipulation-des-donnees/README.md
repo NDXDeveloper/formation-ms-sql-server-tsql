@@ -605,22 +605,19 @@ Utilisez des cas d'usage qui vous parlent (gestion de bibliothèque, collection 
 
 ## Environnement de pratique
 
-Pour suivre ce chapitre, vous aurez besoin d'un environnement SQL Server. Voici quelques options :
+Pour suivre ce chapitre, il vous faut deux choses : un **moteur** SQL Server (qui stocke et exécute) et un **outil client** (pour écrire et lancer vos requêtes).
 
-### Option 1 : SQL Server Express (gratuit)
-- Installation locale
-- Complet et gratuit
-- Idéal pour l'apprentissage
+### Le moteur (au choix)
 
-### Option 2 : Azure Data Studio
-- Outil moderne et léger
-- Cross-platform (Windows, Mac, Linux)
-- Gratuit
+- **SQL Server Developer** : gratuit, **complet** (toutes les fonctionnalités de l'édition Enterprise), réservé au développement et à l'apprentissage → **recommandé pour cette formation**.
+- **SQL Server Express** : gratuit lui aussi, mais **limité** (10 Go par base, pas de SQL Server Agent). Suffisant pour débuter, mais Developer reste préférable.
 
-### Option 3 : SQL Server Management Studio (SSMS)
-- Outil traditionnel Microsoft
-- Windows uniquement
-- Gratuit et très complet
+### L'outil client (au choix)
+
+- **SQL Server Management Studio (SSMS)** : l'outil de référence Microsoft, très complet — **Windows uniquement**, gratuit.
+- **Visual Studio Code + extension MSSQL** : moderne, léger et **multiplateforme** (Windows, macOS, Linux), gratuit. Il remplace Azure Data Studio, dont le support a pris fin en **février 2026**.
+
+> 💡 Le détail de l'installation pas à pas est fourni en **[annexe A](/09-annexes/A-guide-installation.md)**.
 
 ### Créer une base de données de test
 

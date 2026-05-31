@@ -222,7 +222,7 @@ BEGIN ... END
     │
     ├─► Utilisé avec WHILE pour définir le corps de la boucle
     │
-    └─► Obligatoire dans les procédures stockées
+    └─► Recommandé pour le corps des procédures stockées (obligatoire pour TRY...CATCH)
 
 IF ... ELSE
     │
@@ -299,6 +299,7 @@ END
 ```sql
 DECLARE @Compteur INT = 0;
 DECLARE @BatchSize INT = 100;
+DECLARE @Lignes INT;
 
 WHILE @Compteur < 1000
 BEGIN
@@ -307,9 +308,11 @@ BEGIN
     SET Statut = 'Archivé'
     WHERE Statut = 'Terminé' AND DateFin < DATEADD(YEAR, -1, GETDATE());
 
-    SET @Compteur = @Compteur + @@ROWCOUNT;
+    -- Capturer @@ROWCOUNT AVANT toute autre instruction : un simple SET le remettrait à 1
+    SET @Lignes = @@ROWCOUNT;
+    SET @Compteur = @Compteur + @Lignes;
 
-    IF @@ROWCOUNT = 0
+    IF @Lignes = 0
         BREAK;  -- Plus rien à traiter
 END
 ```

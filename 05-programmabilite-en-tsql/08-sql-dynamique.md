@@ -321,8 +321,8 @@ DECLARE @SQL NVARCHAR(500) = 'SELECT * FROM Clients';
 EXEC(@SQL);  -- Exécute la chaîne
 ```
 
-**Avantages** : Simple, direct
-**Inconvénients** : Pas de paramètres, moins sécurisé, moins performant
+**Avantages** : Simple, direct  
+**Inconvénients** : Pas de paramètres, moins sécurisé, moins performant  
 
 ### 2. sp_executesql
 
@@ -333,8 +333,8 @@ DECLARE @SQL NVARCHAR(500) = N'SELECT * FROM Clients WHERE ClientID = @ID';
 EXEC sp_executesql @SQL, N'@ID INT', @ID = 5;
 ```
 
-**Avantages** : Paramètres, sécurisé, performant
-**Inconvénients** : Syntaxe plus complexe
+**Avantages** : Paramètres, sécurisé, performant  
+**Inconvénients** : Syntaxe plus complexe  
 
 **Recommandation** : Utilisez **toujours** `sp_executesql` en production !
 

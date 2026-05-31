@@ -397,7 +397,7 @@ Pour les jointures et les opérateurs d'ensemble, **dessinez** sur papier commen
 
 Souvent, il existe plusieurs façons de résoudre un problème (jointure vs sous-requête vs CTE). Essayez différentes approches et comparez-les.
 
-### 5. Utilisez SSMS ou Azure Data Studio
+### 5. Utilisez SSMS ou VS Code (extension MSSQL)
 
 Ces outils vous permettent de voir les plans d'exécution et de mieux comprendre comment SQL Server traite vos requêtes.
 
@@ -427,13 +427,13 @@ Les fonctions de fenêtrage et les CTEs récursives peuvent sembler déroutantes
 - Affiche les plans d'exécution pour l'optimisation
 - Auto-complétion et coloration syntaxique
 
-**Azure Data Studio** :
-- Alternative moderne et multiplateforme
-- Notebooks SQL pour documenter votre apprentissage
-- Extensions pour améliorer la productivité
+**Visual Studio Code (extension MSSQL)** :
+- Alternative moderne et multiplateforme (Windows, macOS, Linux)
+- Coloration syntaxique, IntelliSense et exécution de requêtes
+- Remplace Azure Data Studio, dont le support a pris fin en février 2026
 
 **Documentation officielle Microsoft** :
-- Reference pour T-SQL : https://docs.microsoft.com/sql
+- Reference pour T-SQL : https://learn.microsoft.com/sql
 - Exemples officiels de chaque fonction
 
 ### Pour aller plus loin

@@ -334,7 +334,7 @@ BEGIN CATCH
 
     -- Logger dans une table
     INSERT INTO LogErreurs (
-        NumeroErreur, Message, Ligne, Procedure, Date
+        NumeroErreur, Message, Ligne, NomProcedure, Date
     )
     VALUES (
         ERROR_NUMBER(), ERROR_MESSAGE(), ERROR_LINE(),
@@ -543,7 +543,7 @@ BEGIN
 
         -- Logger l'erreur
         INSERT INTO LogErreurs (
-            NumeroErreur, MessageErreur, Procedure, Ligne, Date
+            NumeroErreur, MessageErreur, NomProcedure, Ligne, DateErreur
         )
         VALUES (
             ERROR_NUMBER(), ERROR_MESSAGE(),
@@ -637,7 +637,7 @@ CREATE TABLE LogErreurs (
     DateErreur DATETIME DEFAULT GETDATE(),
     NumeroErreur INT,
     MessageErreur NVARCHAR(4000),
-    Procedure NVARCHAR(128),
+    NomProcedure NVARCHAR(128),
     Ligne INT
 );
 ```

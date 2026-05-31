@@ -343,7 +343,7 @@ Quand une requête échoue, lisez attentivement le message d'erreur. Il vous dit
 
 ### 4. Utilisez les outils de développement
 
-SQL Server Management Studio (SSMS) et Azure Data Studio offrent des fonctionnalités utiles :
+SQL Server Management Studio (SSMS) et Visual Studio Code (avec l'extension MSSQL) offrent des fonctionnalités utiles :
 - L'auto-complétion
 - La coloration syntaxique
 - Les plans d'exécution

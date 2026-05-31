@@ -51,6 +51,24 @@ Les bases de données résolvent ces problèmes en offrant :
 - ✅ **Partage** : Plusieurs utilisateurs peuvent accéder simultanément aux données
 - ✅ **Fiabilité** : Mécanismes de sauvegarde et de récupération
 
+### « Pourquoi pas simplement Excel ? »
+
+C'est **la** question que se pose tout débutant. Excel est un excellent outil... pour ce pour quoi il est conçu : l'analyse ponctuelle et les calculs sur de petits volumes. Mais dès qu'il s'agit de gérer **durablement** les données d'une application ou d'une organisation, il atteint vite ses limites.
+
+| Critère | Tableur (Excel) | Base de données (SQL Server) |
+|---------|-----------------|------------------------------|
+| **Volume** | Quelques milliers à ~1 million de lignes, puis lent | Des **millions, voire milliards** de lignes sans broncher |
+| **Accès simultané** | Un seul éditeur à la fois (fichier « verrouillé ») | **Des centaines d'utilisateurs en même temps** |
+| **Intégrité** | Aucune garantie : on peut taper « abc » dans une colonne de prix | **Règles strictes** : types, contraintes, clés étrangères |
+| **Sécurité** | Tout ou rien (le fichier est ouvert ou non) | **Droits fins** : telle personne voit telle table, pas telle autre |
+| **Cohérence** | Données souvent **dupliquées** (le nom du client recopié partout) | Données **reliées** sans duplication (le client stocké une seule fois) |
+| **Recherche** | Filtres manuels, lents sur gros volumes | **Requêtes SQL** indexées, en quelques millisecondes |
+| **Fiabilité** | Un fichier corrompu = tout est perdu | **Sauvegardes** et restauration intégrées |
+
+**Exemple parlant.** Imaginez un fichier Excel `Commandes` où chaque ligne recopie le nom, l'adresse et le téléphone du client. Si un client déménage, il faut corriger **toutes** ses lignes une par une — et au moindre oubli, les données se contredisent. Dans une base de données, le client est stocké **une seule fois** dans une table `Clients`, et chaque commande pointe vers lui : une seule correction suffit.
+
+> 💡 **À retenir** — Excel n'est pas « mauvais » : il reste parfait pour explorer, calculer et visualiser ponctuellement. Mais pour **stocker durablement** des données partagées, une base de données est l'outil adapté. Les deux sont d'ailleurs complémentaires : on exporte souvent des données d'une base vers Excel pour les analyser.
+
 ## Des exemples concrets du quotidien
 
 Les bases de données sont omniprésentes dans notre vie moderne :
@@ -225,6 +243,8 @@ Table CLIENTS :
 └────┴────────┴────────┴─────┴────────┴──────────────┴──────────────┴──────────────┘
 ```
 → Clair, organisé, facile à interroger !
+
+> 💡 **Astuce de conception** : ici, la colonne `Âge` sert d'illustration. En pratique, on stocke plutôt la **date de naissance** (qui ne change jamais) et on calcule l'âge à la volée : une donnée qui « se périme » comme l'âge est à éviter. (Nous y reviendrons au chapitre 2.)
 
 ## Ce que vous allez apprendre
 

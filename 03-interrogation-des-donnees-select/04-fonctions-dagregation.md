@@ -423,14 +423,14 @@ SELECT COUNT(DISTINCT ClientID) FROM Commandes;
 
 ### Avantages
 
-✅ **Calcul côté serveur** : Le serveur de base de données est optimisé pour ces calculs
-✅ **Réduction du trafic réseau** : Une seule valeur est renvoyée au lieu de milliers de lignes
+✅ **Calcul côté serveur** : Le serveur de base de données est optimisé pour ces calculs  
+✅ **Réduction du trafic réseau** : Une seule valeur est renvoyée au lieu de milliers de lignes  
 ✅ **Utilisation d'index** : Les agrégations peuvent bénéficier d'index appropriés
 
 ### Points d'attention
 
-⚠️ **Grandes tables** : Les agrégations sur des millions de lignes sans filtrage peuvent être lentes
-⚠️ **Absence d'index** : Sans index sur les colonnes de filtrage ou d'agrégation, les performances se dégradent
+⚠️ **Grandes tables** : Les agrégations sur des millions de lignes sans filtrage peuvent être lentes  
+⚠️ **Absence d'index** : Sans index sur les colonnes de filtrage ou d'agrégation, les performances se dégradent  
 ⚠️ **Calculs complexes** : Les fonctions complexes dans les agrégations augmentent le temps de calcul
 
 ### Optimisation

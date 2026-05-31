@@ -229,7 +229,7 @@ Prévoyez environ **1 à 2 heures** pour parcourir l'ensemble de cette section. 
 
 ### 1. Pratiquez au fur et à mesure
 
-Ne vous contentez pas de lire les exemples. **Tapez-les** vous-même dans SQL Server Management Studio (SSMS) ou Azure Data Studio et **exécutez-les**. C'est en pratiquant que vous mémoriserez le mieux.
+Ne vous contentez pas de lire les exemples. **Tapez-les** vous-même dans SQL Server Management Studio (SSMS) ou Visual Studio Code (extension MSSQL) et **exécutez-les**. C'est en pratiquant que vous mémoriserez le mieux.
 
 ### 2. Expérimentez
 

@@ -186,8 +186,8 @@ Il est crucial de comprendre que ces clauses sont exécutées dans un ordre logi
 **Points importants :**
 
 - `ORDER BY` est exécuté **après** la sélection des colonnes, ce qui permet d'utiliser des **alias de colonnes**
-- `TOP` s'exécute avant `ORDER BY` dans l'ordre logique, mais nécessite `ORDER BY` pour être prévisible
-- `OFFSET` et `FETCH` sont toujours exécutés **en dernier**, après le tri
+- `TOP` s'applique **après** le tri `ORDER BY` : il conserve les N premières lignes du résultat **déjà trié**. C'est pourquoi un `TOP` **sans** `ORDER BY` renvoie des lignes arbitraires (non déterministes).
+- `OFFSET` et `FETCH` sont eux aussi exécutés **après** le tri
 
 ## Combinaison des techniques
 

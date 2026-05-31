@@ -161,7 +161,7 @@ TRUNCATE TABLE nom_table;
 - ❌ Pas de clause WHERE possible
 - ✅ Très rapide, même sur grosses tables
 - ✅ Réinitialise les compteurs IDENTITY
-- ⚠️ Ne fonctionne pas si la table a des clés étrangères
+- ⚠️ Ne fonctionne pas si la table est **référencée** par une clé étrangère (table parent)
 - ⚠️ Ne déclenche pas les triggers
 
 **Usage typique :** Vider complètement une table (cache, temporaire).
@@ -706,14 +706,14 @@ ROLLBACK;  -- Sécurité : ROLLBACK par défaut
 
 > **La suppression est l'opération la plus dangereuse en SQL.**
 >
-> Contrairement à UPDATE qui écrase les données (on perd les anciennes valeurs),
+> Contrairement à UPDATE qui écrase les données (on perd les anciennes valeurs),  
 > DELETE fait disparaître les lignes complètement.
 >
 > Il n'y a **aucun moyen** de récupérer des données supprimées sans sauvegarde.
 >
-> **Trois règles sacrées :**
-> 1. Testez TOUJOURS avec SELECT d'abord
-> 2. Utilisez TOUJOURS des transactions
+> **Trois règles sacrées :**  
+> 1. Testez TOUJOURS avec SELECT d'abord  
+> 2. Utilisez TOUJOURS des transactions  
 > 3. Ayez TOUJOURS une sauvegarde
 >
 > **5 minutes de précaution valent mieux que des jours de reconstruction de données.**

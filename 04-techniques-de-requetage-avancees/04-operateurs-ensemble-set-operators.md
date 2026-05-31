@@ -189,8 +189,10 @@ SELECT NomClient, ClientID FROM Autres;  -- VARCHAR, INT (ordre inversé !)
 
 **Types compatibles :**
 - INT ↔ BIGINT, DECIMAL, SMALLINT
-- VARCHAR ↔ NVARCHAR, CHAR, TEXT
+- VARCHAR ↔ NVARCHAR, CHAR, VARCHAR(MAX)
 - DATE ↔ DATETIME, DATETIME2
+
+> ⚠️ Les types dépréciés `TEXT`/`NTEXT`/`IMAGE` ne peuvent **pas** apparaître dans un `UNION`/`INTERSECT`/`EXCEPT` : ils ne sont ni comparables ni triables. Utilisez `VARCHAR(MAX)`/`NVARCHAR(MAX)`/`VARBINARY(MAX)`.
 
 ### Règle 3 : Noms de colonnes du premier SELECT
 
@@ -244,6 +246,31 @@ SELECT ClientID, NomClient, Ville FROM Prospects;
 
 -- Une ligne (1, 'Dupont', 'Paris') et (1, 'Dupont', 'Lyon')
 -- sont DIFFÉRENTES (la ville diffère)
+```
+
+### Règle 6 : INTERSECT est prioritaire
+
+Quand plusieurs opérateurs **différents** sont combinés, `INTERSECT` est évalué **en premier** (priorité plus élevée) ; `UNION` et `EXCEPT` ont la même priorité et sont évalués de **gauche à droite**.
+
+```sql
+-- INTERSECT est évalué AVANT le UNION :
+SELECT col FROM A
+UNION
+SELECT col FROM B
+INTERSECT
+SELECT col FROM C;
+-- équivaut à :  A UNION (B INTERSECT C)
+```
+
+Pour imposer un autre ordre, utilisez des **parenthèses** :
+
+```sql
+(SELECT col FROM A
+ UNION
+ SELECT col FROM B)
+INTERSECT
+SELECT col FROM C;
+-- force : (A UNION B) INTERSECT C
 ```
 
 ## Contexte : Tables d'exemple
@@ -477,7 +504,7 @@ FROM Ventes;
 
 **2. Volume de données**
 - Plus il y a de lignes, plus le tri est coûteux
-- L'impact est exponentiel (O(n log n))
+- Le coût du tri croît en O(n log n) : plus que linéairement, mais ce n'est **pas** exponentiel
 
 **3. Nombre de colonnes**
 - Plus de colonnes = plus de comparaisons

@@ -79,7 +79,7 @@ Ce premier chapitre couvre **quatre domaines fondamentaux** :
 - C'est quoi SQL Server exactement ?
 - Quelles sont les différentes versions (Express, Standard, Enterprise) ?
 - Comment SQL Server est-il organisé (instances, services, bases) ?
-- Quels outils utilise-t-on (SSMS, Azure Data Studio) ?
+- Quels outils utilise-t-on (SSMS, VS Code) ?
 
 **Ce que vous saurez faire après :**
 - ✅ Choisir la bonne édition de SQL Server pour vos besoins
@@ -168,19 +168,19 @@ Nous allons vous apprendre le "vocabulaire de base" des bases de données avant 
 
 Pour gérer vos attentes, voici ce que ce chapitre ne contient **volontairement** pas :
 
-❌ **Des lignes de code complexes**
+❌ **Des lignes de code complexes**  
 → Nous montrons du code, mais pour illustrer les concepts, pas pour vous submerger
 
-❌ **Des exercices pratiques détaillés**
+❌ **Des exercices pratiques détaillés**  
 → La pratique intensive viendra au chapitre 2. Ce chapitre est conceptuel
 
-❌ **Des optimisations avancées**
+❌ **Des optimisations avancées**  
 → Nous restons sur les fondamentaux. L'optimisation viendra au chapitre 7
 
-❌ **Tous les détails techniques**
+❌ **Tous les détails techniques**  
 → Nous donnons une vue d'ensemble solide, pas une encyclopédie
 
-❌ **L'installation étape par étape**
+❌ **L'installation étape par étape**  
 → Nous expliquons comment, mais ce n'est pas un guide d'installation détaillé
 
 **Pourquoi ces choix ?**
@@ -277,7 +277,7 @@ Schématisez les concepts. Dessiner force votre cerveau à comprendre.
 **Section 1.2 - SQL Server :**
 - [ ] Je connais les différentes éditions de SQL Server
 - [ ] Je comprends l'architecture (instance, services, bases)
-- [ ] Je sais quels outils utiliser (SSMS ou Azure Data Studio)
+- [ ] Je sais quels outils utiliser (SSMS ou VS Code)
 - [ ] Je peux installer et me connecter à SQL Server
 
 **Section 1.3 - SQL et T-SQL :**
@@ -431,13 +431,13 @@ Une fois ce chapitre 1 terminé, vous serez prêt pour :
 
 ### Témoignages
 
-> **Marc, 28 ans, Développeur junior**
+> **Marc, 28 ans, Développeur junior**  
 > "J'ai appris SQL il y a 6 mois. Aujourd'hui, je suis autonome sur les projets et j'ai eu une augmentation. Ça a vraiment boosté ma carrière !"
 
-> **Sophie, 35 ans, Analyste de données**
+> **Sophie, 35 ans, Analyste de données**  
 > "Avant SQL, j'étais limitée à Excel. Maintenant, je gère des millions de lignes de données et je crée des rapports complexes. Game changer !"
 
-> **Thomas, 42 ans, En reconversion**
+> **Thomas, 42 ans, En reconversion**  
 > "J'avais peur que ce soit trop technique vu mon âge. Mais en prenant mon temps et en pratiquant régulièrement, j'ai décroché un poste de DBA junior. Jamais trop tard !"
 
 ## Les mythes à déconstruire
@@ -484,13 +484,13 @@ Si d'autres l'ont fait, pourquoi pas vous ? Vous avez toutes les ressources néc
 
 ### Citations
 
-> "Le commencement est la partie la plus importante du travail."
+> "Le commencement est la partie la plus importante du travail."  
 > — Platon
 
-> "Un voyage de mille lieues commence toujours par un premier pas."
+> "Un voyage de mille lieues commence toujours par un premier pas."  
 > — Lao Tseu
 
-> "Ce n'est pas parce que c'est difficile que nous n'osons pas, c'est parce que nous n'osons pas que c'est difficile."
+> "Ce n'est pas parce que c'est difficile que nous n'osons pas, c'est parce que nous n'osons pas que c'est difficile."  
 > — Sénèque
 
 ### Prêt à commencer ?
@@ -505,8 +505,8 @@ Alors, prenez une grande inspiration, installez-vous confortablement, et plongez
 
 ---
 
-**Début du parcours** : Vous êtes ici !
-**Prochaine section** : 1.1 Qu'est-ce qu'une base de données ?
+**Début du parcours** : Vous êtes ici !  
+**Prochaine section** : 1.1 Qu'est-ce qu'une base de données ?  
 
 ---
 
@@ -523,7 +523,7 @@ Alors, prenez une grande inspiration, installez-vous confortablement, et plongez
    ├─ 1.2 Présentation de Microsoft SQL Server
    │   ├─ 1.2.1 Histoire et éditions
    │   ├─ 1.2.2 Architecture de base
-   │   └─ 1.2.3 Outils de gestion : SSMS et Azure Data Studio
+   │   └─ 1.2.3 Outils de gestion : SSMS et VS Code
    │
    ├─ 1.3 Le langage SQL et T-SQL
    │   ├─ 1.3.1 Qu'est-ce que T-SQL ?
@@ -534,9 +534,9 @@ Alors, prenez une grande inspiration, installez-vous confortablement, et plongez
        └─ 1.4.2 Schémas (Organisation logique)
 ```
 
-**Temps total estimé : 4-5 heures**
-**Niveau : Débutant**
-**Prérequis : Aucun**
+**Temps total estimé : 4-5 heures**  
+**Niveau : Débutant**  
+**Prérequis : Aucun**  
 
 **C'est parti ! 🎓**
 

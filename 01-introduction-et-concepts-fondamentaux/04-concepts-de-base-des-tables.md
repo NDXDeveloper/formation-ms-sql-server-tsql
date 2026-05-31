@@ -64,9 +64,9 @@ Imaginez que vous allez construire une maison :
 └─────────────────────────────────────────────┘
 ```
 
-Sans tables, une base de données est vide et inutile.
-Avec des tables mal conçues, votre base de données sera inefficace et problématique.
-Avec des tables bien conçues, tout fonctionnera harmonieusement.
+Sans tables, une base de données est vide et inutile.  
+Avec des tables mal conçues, votre base de données sera inefficace et problématique.  
+Avec des tables bien conçues, tout fonctionnera harmonieusement.  
 
 ### 2. Comprendre pour mieux concevoir
 

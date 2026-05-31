@@ -54,14 +54,14 @@ Chaque type de données occupe un espace spécifique en mémoire. Choisir le bon
 
 **Exemple :**
 ```sql
--- ❌ Gaspillage d'espace
-Age VARCHAR(100)        -- Utilise jusqu'à 100 caractères pour stocker "25"
+-- ❌ Surdimensionné
+Age INT                -- Réserve 4 octets pour une valeur qui tient sur 1
 
 -- ✅ Optimisé
-Age TINYINT            -- Utilise seulement 1 octet pour stocker 25
+Age TINYINT            -- 1 seul octet (plage 0 à 255, largement suffisante pour un âge)
 ```
 
-Pour une table de 1 million d'utilisateurs, cette différence représente **100 Mo vs 1 Mo** !
+Pour une table de 1 million de lignes, cette seule colonne occupe **4 Mo vs 1 Mo** — et l'écart se cumule sur chaque colonne surdimensionnée.
 
 ### 3. Performance des requêtes
 
@@ -366,6 +366,8 @@ CREATE TABLE UtilisateursOpt (
 
 -- Gain : 95% d'espace économisé !
 ```
+
+> 📝 **Précision importante** — Un type `VARCHAR(n)` ne réserve **pas** `n` octets : il ne stocke que la longueur réellement utilisée (plus 2 octets d'en-tête). Les chiffres ci-dessus sont donc un **majorant** (pire cas). Le gain le plus sûr vient des types **à taille fixe** bien dimensionnés (`INT` → `TINYINT`, ou un `BIT` au lieu d'un texte « oui »/« non »).
 
 ### Impact sur la vitesse
 
